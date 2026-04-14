@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: PAYMENT-SERVICE
+server:
+  port: 8085
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+stripe:
+  secret:
+    key: sk_test_51TLgf0RQlhJOgTMmWuWUpcHUe167RNswcilyMI6ZuagvGxZX8pUJKxoe2oan4C9uxKs5LEEWprf0vmGUYN6lKr2600nypOrkZL
+#  Key for Front ->  pk_test_51TLgf0RQlhJOgTMmoejEjhDvc6X3NN9QWT3nqY2aKBhVs24t535hR3VSmkyIuR4qZpOpIxgjuWIY8Fu79NlqgFEn00PVZ4oO4N
