@@ -41,12 +41,13 @@ public class AuthService {
         return "User registered successfully";
     }
 
-    public String login(String email, String password, String role) {
+    public String login(String email, String password) {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
-        if (!user.getRole().equals(role)) {
-            throw new RuntimeException("Unauthorized: Role mismatch");
-        }
+
+        // if (!user.getRole().toString().equals(role)) {
+        //     throw new RuntimeException("Unauthorized: Role mismatch");
+        // }
         if (!encoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }

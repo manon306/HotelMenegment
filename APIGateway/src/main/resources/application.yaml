@@ -9,14 +9,8 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/users/**
-          filters:
-            - StripPrefix=1
-            
-        - id: auth-service
-          uri: lb://USER-SERVICE
-          predicates:
             - Path=/api/auth/**
+            - Path=/api/users/**
           filters:
             - StripPrefix=1
         # Room Service (بدل ReviewService حسب الـ modules بتاعتك)
@@ -26,7 +20,6 @@ spring:
             - Path=/api/rooms/**
           filters:
             - StripPrefix=1
-
         # Booking Service
         - id: booking-service
           uri: lb://BOOKING-SERVICE
@@ -66,3 +59,7 @@ eureka:
     service-url:
       defaultZone: http://eureka-service:8761/eureka
       # //http://hotelmanagement-eureka-service-1:8761/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

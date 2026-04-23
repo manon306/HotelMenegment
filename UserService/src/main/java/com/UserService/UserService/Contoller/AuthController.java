@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequest request) {
         try {
             // هنا بتستخدم request.getEmail() و request.getRole()
-            String token = service.login(request.getEmail(), request.getPassword(), request.getRole());
+            String token = service.login(request.getEmail(), request.getPassword());
 
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
