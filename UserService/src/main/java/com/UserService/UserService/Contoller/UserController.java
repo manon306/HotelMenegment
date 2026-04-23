@@ -2,22 +2,30 @@ package com.UserService.UserService.Contoller;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.UserService.UserService.DTO.UserDTO;
 import com.UserService.UserService.Entity.*;
 import com.UserService.UserService.Services.UserServices;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserServices services;
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(services.getAllUsers());
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -25,7 +33,7 @@ public class UserController {
         return services.readUserById(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String deleteUser(@PathVariable Long id) {
         services.deleteUser(id);
@@ -54,5 +62,15 @@ public class UserController {
     public String resetPassword(@RequestBody @Valid Map<String, String> request) {
         services.resetPassword(request.get("email"), request.get("newPassword"));
         return "Password reset!";
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        return ResponseEntity.ok(services.getUserStatistics());
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "USER SERVICE OK";
     }
 }

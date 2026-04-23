@@ -1,7 +1,10 @@
 package com.UserService.UserService.Services;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +15,8 @@ import com.UserService.UserService.Entity.User;
 import com.UserService.UserService.Exceptions.ResourceNotFoundException;
 import com.UserService.UserService.Exceptions.BadRequestException;
 import com.UserService.UserService.Repository.UserRepo;
+import com.UserService.UserService.DTO.UserDTO;
+import java.util.List;
 
 @Service
 public class UserServices {
@@ -54,7 +59,18 @@ public class UserServices {
         }
         repo.deleteById(id);
     }
-
+    public List<UserDTO> getAllUsers() {
+        return repo.findAll().stream()
+                .map(user -> UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .created_at(user.getCreated_at())
+                .build())
+                .collect(Collectors.toList());
+    }
     @Transactional
     public void generateOTP(String email) {
         User user = findUserByEmailOrThrow(email);
@@ -80,5 +96,12 @@ public class UserServices {
         User user = findUserByEmailOrThrow(email);
         user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
         repo.save(user);
+    }
+
+    public Map<String, Object> getUserStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", repo.count());
+        
+        return stats;
     }
 }

@@ -10,7 +10,9 @@ import com.BookingService.BookingService.Repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookingServices {
@@ -176,5 +178,34 @@ public class BookingServices {
             total = total * 0.9;
         }
         return total;
+    }
+
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // 1. حساب الإيرادات
+        Double totalRevenue = repo.sumAllRevenue();
+        stats.put("totalRevenue", totalRevenue != null ? totalRevenue : 0.0);
+
+        // 2. إجمالي الحجوزات
+        stats.put("totalBookings", repo.count());
+
+        // 3. حساب نسبة الإشغال (Logic مخصص)
+        stats.put("occupancyRate", calculateOccupancyPercent());
+
+        return stats;
+    }
+
+    private double calculateOccupancyPercent() {
+        // 1. عدد الحجوزات النشطة فعلياً النهاردة
+        long activeBookings = repo.countCurrentActiveBookings();
+
+        var totalRooms = roomClient.GetTotalRooms();
+
+        if (totalRooms == null || totalRooms == 0)
+            return 0.0;
+
+        double rate = ((double) activeBookings / totalRooms) * 100;
+        return Math.round(rate * 10) / 10.0;
     }
 }

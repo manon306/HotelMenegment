@@ -2,9 +2,11 @@ spring:
   application:
     name: USER-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3307/Hotel?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql-db:3306/Hotel?createDatabaseIfNotExist=true
     username: root
-    password: "" # فاضي = no password
+    password: root
+    hikari:
+      initialization-fail-timeout: 0
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -31,4 +33,5 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-service:8761/eureka
+      # http://hotelmanagement-eureka-service-1:8761/eureka

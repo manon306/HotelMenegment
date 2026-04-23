@@ -98,4 +98,9 @@ public class ReviewController {
     public ResponseEntity<Map<String, Object>> getMonitoringStats(@PathVariable long room_id) {
         return ResponseEntity.ok(service.getMonitoringStats(room_id));
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        return ResponseEntity.ok(service.getReviewStatistics());
+    }
 }

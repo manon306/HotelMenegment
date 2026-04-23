@@ -190,4 +190,16 @@ public class ReviewService {
         return Repo.existsByUserIdAndRoomId(userId, roomId);
     }
 
+    public Map<String, Object> getReviewStatistics() {
+        Map<String, Object> stats = new HashMap<>();
+
+        // حساب متوسط التقييمات من الداتابيز
+        Double avgRating = Repo.getAverageRating();
+        Double totalReviews = Repo.getTotalReviews();
+
+        stats.put("avgRating", avgRating != null ? Math.round(avgRating * 10) / 10.0 : 0.0);
+        stats.put("totalReviews", totalReviews != null ? totalReviews : 0);
+        return stats;
+    }
+
 }

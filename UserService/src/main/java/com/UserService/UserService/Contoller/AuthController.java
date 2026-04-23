@@ -1,6 +1,7 @@
 package com.UserService.UserService.Contoller;
 
-import com.UserService.UserService.Entity.User;
+import com.UserService.UserService.DTO.LoginRequest;
+import com.UserService.UserService.DTO.RegisterDTO;
 import com.UserService.UserService.Services.AuthService;
 
 import jakarta.validation.Valid;
@@ -20,33 +21,29 @@ public class AuthController {
     private AuthService service;
 
     @PostMapping("/register")
-    public String register(@RequestBody @Valid User user) {
-        return service.register(user);
+    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegisterDTO user) {
+        try {
+            service.register(user);
+            return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid Map<String, String> credentials) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequest request) {
         try {
-            String token = service.login(credentials.get("username"), credentials.get("password"));
+            // هنا بتستخدم request.getEmail() و request.getRole()
+            String token = service.login(request.getEmail(), request.getPassword(), request.getRole());
 
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
             response.put("message", "Login successful");
 
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-
-            return ResponseEntity.status(401).body(error);
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
     }
 
-    // // ADMIN ONLY TEST
-    // @GetMapping("/admin/test")
-    // @PreAuthorize("hasRole('ADMIN')")
-    // public String adminOnly() {
-    // return "Admin only";
-    // }
 }

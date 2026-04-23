@@ -1,6 +1,7 @@
 package com.BookingService.BookingService.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -81,5 +82,9 @@ public class BookingController {
             @RequestParam String status) {
         bookingServices.updateStatus(id, status);
         return ResponseEntity.ok("Booking status updated");
+    }
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        return ResponseEntity.ok(bookingServices.getDashboardStats());
     }
 }

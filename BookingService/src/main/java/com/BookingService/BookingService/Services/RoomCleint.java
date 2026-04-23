@@ -7,7 +7,6 @@ import org.springframework.web.client.RestTemplate;
 import com.BookingService.BookingService.DTO.RoomDTO;
 import com.BookingService.BookingService.Exceptions.BadRequestException;
 
-
 @Service
 public class RoomCleint {
     @Autowired
@@ -30,4 +29,15 @@ public class RoomCleint {
             throw new BadRequestException("Failed to update room status: " + e.getMessage());
         }
     }
+
+    public Integer GetTotalRooms() {
+        Integer totalRooms;
+        try {
+            totalRooms = restTemplate.getForObject("http://ROOM-SERVICE/api/rooms/count", Integer.class);
+        } catch (Exception e) {
+            totalRooms = 50; // Fallback في حالة لو الخدمة التانية وقعت
+        }
+        return totalRooms;
+    }
+
 }

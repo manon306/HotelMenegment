@@ -1,18 +1,24 @@
 spring:
   application:
-    name: API-GATEWAY   # يفضل تكون capital letters مع dashes
-    
+    name: API-GATEWAY # يفضل تكون capital letters مع dashes
+
   cloud:
     gateway:
       routes:
         # User Service
         - id: user-service
-          uri: lb://USER-SERVICE    
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/users/**    
+            - Path=/api/users/**
           filters:
             - StripPrefix=1
-
+            
+        - id: auth-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
         # Room Service (بدل ReviewService حسب الـ modules بتاعتك)
         - id: room-service
           uri: lb://ROOM-SERVICE
@@ -28,7 +34,7 @@ spring:
             - Path=/api/bookings/**
           filters:
             - StripPrefix=1
-            
+
         # Payment Service
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
@@ -36,7 +42,7 @@ spring:
             - Path=/api/payments/**
           filters:
             - StripPrefix=1
-            
+
         # Notification Service
         - id: notification-service
           uri: lb://NOTIFICATION-SERVICE
@@ -58,4 +64,5 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-service:8761/eureka
+      # //http://hotelmanagement-eureka-service-1:8761/eureka

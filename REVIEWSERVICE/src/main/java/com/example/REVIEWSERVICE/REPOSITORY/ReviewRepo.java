@@ -16,5 +16,12 @@ public interface ReviewRepo extends JpaRepository<Review, Long> {
     Optional<Double> findAvgRatingByRoomId(@Param("roomId") long roomId);
 
     boolean existsByUserIdAndRoomId(long userId, long roomId);
+
     List<Review> findByUserId(long userId);
+
+    @Query("SELECT AVG(r.rating) FROM Review r")
+    Double getAverageRating();
+
+    @Query("SELECT COUNT(r) FROM Review r")
+    Double getTotalReviews();
 }

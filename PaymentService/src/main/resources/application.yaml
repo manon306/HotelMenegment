@@ -6,7 +6,8 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-service:8761/eureka
+      # http://hotelmanagement-eureka-service-1:8761/eureka
 stripe:
   secret:
     key: sk_test_51TLgf0RQlhJOgTMmWuWUpcHUe167RNswcilyMI6ZuagvGxZX8pUJKxoe2oan4C9uxKs5LEEWprf0vmGUYN6lKr2600nypOrkZL
