@@ -14,19 +14,19 @@ import jakarta.validation.Valid;
 import com.BookingService.BookingService.Entity.Booking;
 
 @RestController
-@RequestMapping("/Booking")
+@RequestMapping("/bookings")
 public class BookingController {
 
     @Autowired
     private BookingServices bookingServices;
 
-    @PostMapping("/bookings")
+    @PostMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Booking> createBooking(@RequestBody @Valid Booking request) {
         return ResponseEntity.ok(this.bookingServices.createBooking(request));
     }
 
-    @PutMapping("/bookings/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('CUSTOMER','EMPLOYEE')")
     public ResponseEntity<?> modifyBooking(@PathVariable Long id,
             @RequestBody @Valid Booking request) {
@@ -34,26 +34,26 @@ public class BookingController {
         return ResponseEntity.ok("Booking updated successfully");
     }
 
-    @DeleteMapping("/bookings/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('CUSTOMER','EMPLOYEE')")
     public ResponseEntity<?> cancelBooking(@PathVariable Long id) {
         this.bookingServices.cancelBooking(id);
         return ResponseEntity.ok("Booking cancelled successfully");
     }
 
-    @GetMapping("/bookings/history/{userId}")
+    @GetMapping("/history/{userId}")
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public ResponseEntity<List<Booking>> viewBookingHistory(@PathVariable Long userId) {
         return ResponseEntity.ok(this.bookingServices.viewBookingHistory(userId));
     }
 
-    @PostMapping("/bookings/{id}/accept")
+    @PostMapping("/{id}/accept")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Booking> acceptBooking(@PathVariable Long id) {
         return ResponseEntity.ok(this.bookingServices.acceptBooking(id));
     }
 
-    @PostMapping("/bookings/{id}/reject")
+    @PostMapping("/{id}/reject")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> rejectBooking(@PathVariable Long id) {
         this.bookingServices.rejectBooking(id);
@@ -61,7 +61,7 @@ public class BookingController {
     }
 
     // CHECK-IN → EMPLOYEE only
-    @PostMapping("/bookings/{id}/checkin")
+    @PostMapping("/{id}/checkin")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<?> checkIn(@PathVariable Long id) {
         this.bookingServices.checkIn(id);
@@ -69,14 +69,14 @@ public class BookingController {
     }
 
     // CHECK-OUT → EMPLOYEE only
-    @PostMapping("/bookings/{id}/checkout")
+    @PostMapping("/{id}/checkout")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<?> checkOut(@PathVariable Long id) {
         this.bookingServices.checkOut(id);
         return ResponseEntity.ok("Booking checked out successfully");
     }
 
-    @PutMapping("/bookings/{id}/status")
+    @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> updateBookingStatus(@PathVariable Long id,
             @RequestParam String status) {

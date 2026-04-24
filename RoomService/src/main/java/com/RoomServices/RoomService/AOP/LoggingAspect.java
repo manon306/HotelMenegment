@@ -27,9 +27,8 @@ public class LoggingAspect {
 
     @AfterReturning(pointcut = "serviceLayer()", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        logger.info("Success: {} returned: {}",
-                joinPoint.getSignature().getName(),
-                result);
+        logger.info("Success: {}",
+                joinPoint.getSignature().getName());
     }
 
     @AfterThrowing(pointcut = "serviceLayer()", throwing = "ex")

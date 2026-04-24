@@ -2,6 +2,7 @@ package com.RoomServices.RoomService.Entity;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -22,5 +23,7 @@ public class RoomImage {
     @ManyToOne
     @JoinColumn(name = "room_id")
     @JsonIgnore
+    @JsonBackReference
+    @ToString.Exclude
     private Room room;
 }

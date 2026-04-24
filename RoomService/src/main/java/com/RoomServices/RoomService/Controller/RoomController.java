@@ -33,7 +33,7 @@ public class RoomController {
     // Create
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Room> createRoom(@ModelAttribute @Valid  CreateRoomRequest request) {
+    public ResponseEntity<Room> createRoom(@ModelAttribute @Valid CreateRoomRequest request) {
         return ResponseEntity.ok(roomService.addRoom(request));
     }
 
@@ -55,7 +55,7 @@ public class RoomController {
 
     // Get by ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'EMPLOYEE')")
     public ResponseEntity<Room> getRoom(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.getRoomById(id));
     }
@@ -108,7 +108,7 @@ public class RoomController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
 
-        Path filePath = Paths.get("C:/Users/USER/Desktop/hotelManagement/uploads/")
+        Path filePath = Paths.get("app/uploads/")
                 .resolve(filename);
 
         Resource resource = new UrlResource(filePath.toUri());

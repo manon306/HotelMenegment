@@ -60,7 +60,7 @@ public class BookingServices {
     }
 
     private void bookRoom(Long roomId) {
-        roomClient.updateRoomStatus(roomId, "BOOKED");
+        roomClient.updateRoomStatus(roomId, "Booked");
     }
 
     private void occupyRoom(Long roomId) {
@@ -200,7 +200,7 @@ public class BookingServices {
         // 1. عدد الحجوزات النشطة فعلياً النهاردة
         long activeBookings = repo.countCurrentActiveBookings();
 
-        var totalRooms = roomClient.GetTotalRooms();
+        var totalRooms = roomClient.getTotalRooms();
 
         if (totalRooms == null || totalRooms == 0)
             return 0.0;

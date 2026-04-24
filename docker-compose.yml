@@ -26,6 +26,13 @@ services:
   user-service:
     image: hotelmanagement-user-service:latest
     container_name: user-service
+    develop:
+      watch : 
+        - action : rebuild
+          path : ./UserService/src
+        - action : sync
+          path : ./UserService/pom.yaml
+          target : /app/pom.yaml
     ports:
       - "8081:8081"
     depends_on:
@@ -56,6 +63,13 @@ services:
     container_name: Room-service
     ports:
       - "8082:8082"
+    develop:
+      watch : 
+        - action : rebuild
+          path : ./RoomService/src
+        - action : sync
+          path : ./RoomService/pom.yaml
+          target : /app/pom.yaml
     depends_on:
       - mysql-db
       - eureka-service
