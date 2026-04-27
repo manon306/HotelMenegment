@@ -25,6 +25,7 @@ public class SecurityConfig {
         http
 
                 .csrf(csrf -> csrf.disable()) // disable CSRF
+                .cors(cors -> cors.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // Register + Login
