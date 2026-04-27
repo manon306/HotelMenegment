@@ -15,10 +15,11 @@ import java.util.function.Function;
 public class JwtService {
     private final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-    public String generateToken(String username, Role role) {
+    public String generateToken(String username, Role role, Long userId) {
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role.name())
+                .claim("userId", userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), Jwts.SIG.HS256)
