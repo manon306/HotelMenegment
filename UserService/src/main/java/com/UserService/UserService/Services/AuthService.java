@@ -33,6 +33,7 @@ public class AuthService {
         user.setUsername(dto.username);
         user.setEmail(dto.email);
         user.setPassword(encoder.encode(dto.password));
+        
         user.setRole(dto.getRole());
 
         repo.save(user);
