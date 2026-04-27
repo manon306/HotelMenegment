@@ -63,9 +63,9 @@ public class BookingServices {
         roomClient.updateRoomStatus(roomId, "Booked");
     }
 
-    private void occupyRoom(Long roomId) {
-        roomClient.updateRoomStatus(roomId, "OCCUPIED");
-    }
+    // private void occupyRoom(Long roomId) {
+    // roomClient.updateRoomStatus(roomId, "OCCUPIED");
+    // }
 
     public Booking createBooking(Booking booking) {
         validateUserExists(booking.getUserId());
@@ -140,7 +140,6 @@ public class BookingServices {
 
         booking.setStatus(BookingStatus.CHECKED_IN);
         repo.save(booking);
-        occupyRoom(booking.getRoomId());
     }
 
     public void checkOut(Long bookingId) {

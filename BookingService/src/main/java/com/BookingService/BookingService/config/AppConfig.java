@@ -31,8 +31,7 @@ public class AppConfig {
     @LoadBalanced
     public RestTemplate restTemplate() {
         HttpClient httpClient = HttpClients.createDefault();
-        HttpComponentsClientHttpRequestFactory factory = 
-            new HttpComponentsClientHttpRequestFactory(httpClient);
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
         return new RestTemplate(factory);
     }
 }

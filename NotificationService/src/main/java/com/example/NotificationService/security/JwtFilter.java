@@ -1,31 +1,28 @@
-package com.UserService.UserService.security;
-
-import com.UserService.UserService.Services.CustomUserDetailsService;
-import com.UserService.UserService.Services.JwtService;
+package com.example.NotificationService.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.example.NotificationService.Services.JwtService;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
+    // هنا هتحتاج تنسخ كلاس الـ JwtService برضه للـ RoomService وتغير الـ package
+    // بتاعه
     @Autowired
     private JwtService jwtService;
-
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -38,19 +35,17 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String jwt = authHeader.substring(7);
-        String email = jwtService.extractUsername(jwt);
-
+        String email = jwtService.extractUsername(jwt); // بنستخرج الايميل من الـ Token
+        System.out.println("AUTH HEADER: " + authHeader);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // ✅ قرأ الـ role من الـ token مباشرة - مش من الـ DB
+            // بدلاً من الـ Database، بنقرأ الـ Role من الـ Token مباشرة
             String role = jwtService.extractRole(jwt);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    email, null,
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
+                    email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
         filterChain.doFilter(request, response);
     }
-
 }

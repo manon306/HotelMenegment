@@ -1,6 +1,14 @@
 spring:
   application:
     name: PAYMENT-SERVICE
+  jpa:
+    hibernate:
+      ddl-auto: update # ← هيعمل الـ tables تلقائياً
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://mysql-db:3306/Hotel?createDatabaseIfNotExist=true
+    username: root
+    password: root
 server:
   port: 8085
 eureka:

@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(7);
         String email = jwtService.extractUsername(jwt); // بنستخرج الايميل من الـ Token
-
+        System.out.println("AUTH HEADER: " + authHeader);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // بدلاً من الـ Database، بنقرأ الـ Role من الـ Token مباشرة
             String role = jwtService.extractRole(jwt);

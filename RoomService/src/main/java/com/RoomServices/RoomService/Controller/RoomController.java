@@ -77,7 +77,7 @@ public class RoomController {
 
     // Update Status
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'EMPLOYEE')")
     public ResponseEntity<Room> updateStatus(@PathVariable Long id,
             @RequestParam RoomStatus status) {
         return ResponseEntity.ok(roomService.updateRoomStatus(id, status));

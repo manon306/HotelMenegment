@@ -9,15 +9,14 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/auth/**
-            - Path=/api/users/**
+            - Path=/api/auth/**,/api/users/**
           filters:
             - StripPrefix=1
-        # Room Service (بدل ReviewService حسب الـ modules بتاعتك)
+
         - id: room-service
           uri: lb://ROOM-SERVICE
           predicates:
-            - Path=/api/rooms/**
+            - Path=/api/rooms/**,/api/wishlist/**
           filters:
             - StripPrefix=1
         # Booking Service
@@ -27,12 +26,11 @@ spring:
             - Path=/api/bookings/**
           filters:
             - StripPrefix=1
-
         # Payment Service
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Path=/api/payments/**
+            - Path=/api/payments/**, /api/invoices/**
           filters:
             - StripPrefix=1
 
@@ -43,7 +41,13 @@ spring:
             - Path=/api/notifications/**
           filters:
             - StripPrefix=1
-
+        # Review Service
+        - id: review-service
+          uri: lb://REVIEW-SERVICE
+          predicates:
+            - Path=/api/reviews/**
+          filters:
+            - StripPrefix=1
       globalcors:
         corsConfigurations:
           "[/**]":
