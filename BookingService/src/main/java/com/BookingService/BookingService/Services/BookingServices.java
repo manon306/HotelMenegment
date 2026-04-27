@@ -182,21 +182,17 @@ public class BookingServices {
     public Map<String, Object> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();
 
-        // 1. حساب الإيرادات
         Double totalRevenue = repo.sumAllRevenue();
         stats.put("totalRevenue", totalRevenue != null ? totalRevenue : 0.0);
 
-        // 2. إجمالي الحجوزات
         stats.put("totalBookings", repo.count());
 
-        // 3. حساب نسبة الإشغال (Logic مخصص)
         stats.put("occupancyRate", calculateOccupancyPercent());
 
         return stats;
     }
 
     private double calculateOccupancyPercent() {
-        // 1. عدد الحجوزات النشطة فعلياً النهاردة
         long activeBookings = repo.countCurrentActiveBookings();
 
         var totalRooms = roomClient.getTotalRooms();

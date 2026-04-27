@@ -25,16 +25,14 @@ public class AuthService {
 
     @Transactional
     public String register(RegisterDTO dto) {
-        // التأكد إن الباسوردين زي بعض
         if (!dto.password.equals(dto.Confirmpassword)) {
             throw new BadRequestException("Passwords do not match!");
         }
 
-        // تشفير الباسورد وحفظ اليوزر
         User user = new User();
         user.setUsername(dto.username);
         user.setEmail(dto.email);
-        user.setPassword(encoder.encode(dto.password)); // تشفير!
+        user.setPassword(encoder.encode(dto.password));
         user.setRole(dto.getRole());
 
         repo.save(user);
@@ -45,9 +43,6 @@ public class AuthService {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-        // if (!user.getRole().toString().equals(role)) {
-        //     throw new RuntimeException("Unauthorized: Role mismatch");
-        // }
         if (!encoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }

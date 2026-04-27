@@ -14,8 +14,9 @@ public class LoggingAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Pointcut("execution(* com.RoomServices.RoomService.Services..*(..))")
-    public void serviceLayer() {}
+    @Pointcut("execution(* com.example.NotificationService.Services..*(..))")
+    public void serviceLayer() {
+    }
 
     @Before("serviceLayer()")
     public void logBefore(JoinPoint joinPoint) {

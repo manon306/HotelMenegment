@@ -16,7 +16,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
         long countByStatus(String status);
 
-        // في BookingRepository
         @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'CONFIRMED' AND CURRENT_DATE BETWEEN b.check_in_Date AND b.check_out_Date")
         long countCurrentActiveBookings();
 
