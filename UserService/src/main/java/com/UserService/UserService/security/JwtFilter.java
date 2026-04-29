@@ -41,7 +41,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtService.extractUsername(jwt);
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // ✅ قرأ الـ role من الـ token مباشرة - مش من الـ DB
             String role = jwtService.extractRole(jwt);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
