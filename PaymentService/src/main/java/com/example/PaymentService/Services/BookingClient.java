@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -32,11 +33,31 @@ public class BookingClient {
         return new HttpEntity<>(headers);
     }
 
-    public void updateStatus(Long bookingId, String status, String paymentIntentId) {
+    // public void updateStatus(Long bookingId, String status, String
+    // paymentIntentId) {
+    // try {
+    // // ضفنا paymentIntentId كـ Query Parameter في الـ URL
+    // String url = "http://BOOKING-SERVICE/bookings/" + bookingId +
+    // "/status?status=" + status + "&paymentIntentId=" + paymentIntentId;
+    // restTemplate.exchange(url, HttpMethod.PUT, buildAuthEntity(), Void.class);
+    // } catch (Exception e) {
+    // System.out.println("Booking update failed: " + e.getMessage());
+    // }
+    // }
+    public void updateStatus(Long bookingId, String status, String paymentIntentId, String paymentStatus) {
         try {
-            // ضفنا paymentIntentId كـ Query Parameter في الـ URL
-            String url = "http://BOOKING-SERVICE/bookings/" + bookingId + "/status?status=" + status + "&paymentIntentId=" + paymentIntentId;
-            restTemplate.exchange(url, HttpMethod.PUT, buildAuthEntity(), Void.class);
+            UriComponentsBuilder builder = UriComponentsBuilder
+                    .fromHttpUrl("http://BOOKING-SERVICE/bookings/" + bookingId + "/status")
+                    .queryParam("status", status)
+                    .queryParam("paymentIntentId", paymentIntentId)
+                    .queryParam("paymentStatus", paymentStatus);
+
+            restTemplate.exchange(
+                    builder.toUriString(),
+                    HttpMethod.PUT,
+                    buildAuthEntity(),
+                    Void.class);
+
         } catch (Exception e) {
             System.out.println("Booking update failed: " + e.getMessage());
         }
