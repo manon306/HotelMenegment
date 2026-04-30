@@ -25,6 +25,9 @@ public class AuthService {
 
     @Transactional
     public String register(RegisterDTO dto) {
+        if (repo.findByEmail(dto.email).isPresent()) {
+            throw new BadRequestException("Email is already in use!");
+        }
         if (!dto.password.equals(dto.Confirmpassword)) {
             throw new BadRequestException("Passwords do not match!");
         }
@@ -33,7 +36,7 @@ public class AuthService {
         user.setUsername(dto.username);
         user.setEmail(dto.email);
         user.setPassword(encoder.encode(dto.password));
-        
+
         user.setRole(dto.getRole());
 
         repo.save(user);

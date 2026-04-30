@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServices {
@@ -116,11 +117,28 @@ public class BookingServices {
         return repo.findByUserId(userId);
     }
 
+    public List<Booking> viewAllBookings() {
+        return repo.findAll();
+    }
+
+    public int countPendingBookingRequests() {
+        return repo.countByBookingStatus(BookingStatus.PENDING);
+    }
+
+    public int countConfirmedBookings() {
+        return repo.countByBookingStatus(BookingStatus.ACCEPTED);
+    }
+
     public Booking acceptBooking(Long bookingId) {
         validateBookingId(bookingId);
         Booking booking = findBookingOrThrow(bookingId);
         booking.setStatus(BookingStatus.ACCEPTED);
         return repo.save(booking);
+    }
+
+    public Double countTotalRevenue() {
+        Double totalRevenue = repo.sumAllRevenue();
+        return totalRevenue != null ? totalRevenue : 0;
     }
 
     public void rejectBooking(Long bookingId) {

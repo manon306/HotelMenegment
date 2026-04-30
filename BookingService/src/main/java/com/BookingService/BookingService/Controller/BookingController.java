@@ -12,6 +12,8 @@ import com.BookingService.BookingService.Services.BookingServices;
 
 import jakarta.validation.Valid;
 import com.BookingService.BookingService.Entity.Booking;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/bookings")
@@ -83,8 +85,30 @@ public class BookingController {
         bookingServices.updateStatus(id, status);
         return ResponseEntity.ok("Booking status updated");
     }
+
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         return ResponseEntity.ok(bookingServices.getDashboardStats());
     }
+
+    @GetMapping("/AllBookings")
+    public ResponseEntity<List<Booking>> getAllBooking() {
+        return ResponseEntity.ok(bookingServices.viewAllBookings());
+    }
+
+    @GetMapping("/pending/count")
+    public ResponseEntity<Integer> countPendingBookingRequests() {
+        return ResponseEntity.ok(bookingServices.countPendingBookingRequests());
+    }
+
+    @GetMapping("/confirmed/count")
+    public ResponseEntity<Integer> countConfirmedBookings() {
+        return ResponseEntity.ok(bookingServices.countConfirmedBookings());
+    }
+
+    @GetMapping("/revenue/total")
+    public ResponseEntity<Double> countTotalRevenue() {
+        return ResponseEntity.ok(bookingServices.countTotalRevenue());
+    }
+
 }

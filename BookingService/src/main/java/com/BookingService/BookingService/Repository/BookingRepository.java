@@ -1,5 +1,6 @@
 package com.BookingService.BookingService.Repository;
 
+import com.BookingService.BookingService.ENUM.BookingStatus;
 import com.BookingService.BookingService.Entity.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
         @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'CONFIRMED' AND CURRENT_DATE BETWEEN b.check_in_Date AND b.check_out_Date")
         long countCurrentActiveBookings();
+
+        int countByBookingStatus(BookingStatus status);
 
 }
