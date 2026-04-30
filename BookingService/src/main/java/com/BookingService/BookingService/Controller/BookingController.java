@@ -64,7 +64,7 @@ public class BookingController {
 
     // CHECK-IN → EMPLOYEE only
     @PostMapping("/{id}/checkin")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> checkIn(@PathVariable Long id) {
         this.bookingServices.checkIn(id);
         return ResponseEntity.ok("Booking checked in successfully");
@@ -72,7 +72,7 @@ public class BookingController {
 
     // CHECK-OUT → EMPLOYEE only
     @PostMapping("/{id}/checkout")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> checkOut(@PathVariable Long id) {
         this.bookingServices.checkOut(id);
         return ResponseEntity.ok("Booking checked out successfully");
@@ -81,8 +81,9 @@ public class BookingController {
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> updateBookingStatus(@PathVariable Long id,
-            @RequestParam String status) {
-        bookingServices.updateStatus(id, status);
+            @RequestParam String status,
+            @RequestParam(required = false) String PaymentIntentId) {
+        bookingServices.updateStatus(id, status, PaymentIntentId);
         return ResponseEntity.ok("Booking status updated");
     }
 

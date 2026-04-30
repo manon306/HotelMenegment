@@ -26,6 +26,9 @@ public class BookingServices {
     @Autowired
     private RoomCleint roomClient;
 
+    @Autowired
+    private PaymentClient paymentClient;
+
     private void validateBookingId(Long id) {
         if (id == null || id <= 0) {
             throw new BadRequestException("Invalid booking ID: " + id);
@@ -62,10 +65,6 @@ public class BookingServices {
     private void bookRoom(Long roomId) {
         roomClient.updateRoomStatus(roomId, "Booked");
     }
-
-    // private void occupyRoom(Long roomId) {
-    // roomClient.updateRoomStatus(roomId, "OCCUPIED");
-    // }
 
     public Booking createBooking(Booking booking) {
         validateUserExists(booking.getUserId());
@@ -140,9 +139,29 @@ public class BookingServices {
         return totalRevenue != null ? totalRevenue : 0;
     }
 
+    // public void rejectBooking(Long bookingId) {
+    // validateBookingId(bookingId);
+    // Booking booking = findBookingOrThrow(bookingId);
+    // booking.setStatus(BookingStatus.REJECTED);
+    // repo.save(booking);
+    // releaseRoom(booking.getRoomId());
+    // }
+    // داخل BookingServices.java
     public void rejectBooking(Long bookingId) {
         validateBookingId(bookingId);
         Booking booking = findBookingOrThrow(bookingId);
+
+        String intentId = booking.getPaymentIntentId();
+
+        if (intentId != null && !intentId.isEmpty()) {
+            try {
+                paymentClient.RefundPayment(intentId);
+                System.out.println("Refund processed for booking: " + bookingId);
+            } catch (Exception e) {
+                System.err.println("Refund failed but continuing rejection: " + e.getMessage());
+            }
+        }
+
         booking.setStatus(BookingStatus.REJECTED);
         repo.save(booking);
         releaseRoom(booking.getRoomId());
@@ -166,12 +185,13 @@ public class BookingServices {
         releaseRoom(booking.getRoomId());
     }
 
-    public void updateStatus(Long bookingId, String status) {
+    public void updateStatus(Long bookingId, String status, String paymentIntentId) {
         Booking booking = findBookingOrThrow(bookingId);
 
         switch (status) {
-            case "CONFIRMED":
+            case "ACCEPTED":
                 booking.setStatus(BookingStatus.ACCEPTED);
+                booking.setPaymentIntentId(paymentIntentId);
                 break;
             case "CANCELLED":
                 booking.setStatus(BookingStatus.CANCELLED);
@@ -183,6 +203,7 @@ public class BookingServices {
 
         repo.save(booking);
     }
+    
 
     private double calculateTotalPrice(Booking booking, RoomDTO room) {
         long days = ChronoUnit.DAYS.between(booking.getCheck_in_Date(), booking.getCheck_out_Date());

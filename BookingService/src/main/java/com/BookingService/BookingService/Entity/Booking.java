@@ -37,4 +37,5 @@ public class Booking {
     private LocalDate created_at;
     private String phone;
     private int totalGuests;
+    private String paymentIntentId;
 }

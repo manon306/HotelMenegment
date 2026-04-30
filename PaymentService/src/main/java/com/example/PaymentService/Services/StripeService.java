@@ -7,7 +7,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
+import com.stripe.param.RefundCreateParams;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -32,5 +35,12 @@ public class StripeService {
     public PaymentIntent retrieveIntent(String id) throws Exception {
         Stripe.apiKey = secretKey;
         return PaymentIntent.retrieve(id);
+    }
+
+    public Refund createRefund(String paymentIntentId) throws Exception {
+        RefundCreateParams params = RefundCreateParams.builder()
+                .setPaymentIntent(paymentIntentId)
+                .build();
+        return Refund.create(params);
     }
 }

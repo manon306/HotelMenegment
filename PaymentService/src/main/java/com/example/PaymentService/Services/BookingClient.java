@@ -32,9 +32,10 @@ public class BookingClient {
         return new HttpEntity<>(headers);
     }
 
-    public void updateStatus(Long bookingId, String status) {
+    public void updateStatus(Long bookingId, String status, String paymentIntentId) {
         try {
-            String url = "http://BOOKING-SERVICE/bookings/" + bookingId + "/status?status=" + status;
+            // ضفنا paymentIntentId كـ Query Parameter في الـ URL
+            String url = "http://BOOKING-SERVICE/bookings/" + bookingId + "/status?status=" + status + "&paymentIntentId=" + paymentIntentId;
             restTemplate.exchange(url, HttpMethod.PUT, buildAuthEntity(), Void.class);
         } catch (Exception e) {
             System.out.println("Booking update failed: " + e.getMessage());

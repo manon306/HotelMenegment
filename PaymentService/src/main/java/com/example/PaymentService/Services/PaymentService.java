@@ -66,7 +66,8 @@ public class PaymentService {
             case "succeeded":
                 payment.setPaymentStatus(PaymentStatus.PAID);
                 invoiceService.generate(payment, customerName, customerEmail, customerPhone);
-                bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED");
+                bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED", paymentIntentId);
+
                 break;
 
             case "processing":
@@ -75,7 +76,7 @@ public class PaymentService {
 
             default:
                 payment.setPaymentStatus(PaymentStatus.FAILED);
-                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED");
+                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED", paymentIntentId);
         }
 
         paymentRepository.save(payment);
@@ -120,5 +121,21 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         return intent.getClientSecret();
+    }
+
+    public String refundPayment(String paymentIntentId) throws Exception {
+        Payment payment = paymentRepository.findByTransactionId(paymentIntentId);
+        if (payment == null) {
+            throw new ResourceNotFoundException("Payment record not found for Intent ID: " + paymentIntentId);
+        }
+
+        com.stripe.model.Refund stripeRefund = stripeService.createRefund(paymentIntentId);
+
+        if ("succeeded".equals(stripeRefund.getStatus())) {
+            payment.setPaymentStatus(PaymentStatus.REFUNDED);
+            paymentRepository.save(payment);
+        }
+
+        return stripeRefund.getStatus();
     }
 }
