@@ -36,5 +36,5 @@ public class Booking {
     public double TotalPrice;
     private LocalDate created_at;
     private String phone;
-
+    private int totalGuests;
 }

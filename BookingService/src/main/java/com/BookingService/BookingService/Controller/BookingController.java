@@ -92,6 +92,7 @@ public class BookingController {
     }
 
     @GetMapping("/AllBookings")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public ResponseEntity<List<Booking>> getAllBooking() {
         return ResponseEntity.ok(bookingServices.viewAllBookings());
     }
