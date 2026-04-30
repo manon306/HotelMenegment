@@ -170,8 +170,12 @@ public class BookingServices {
     public void checkIn(Long bookingId) {
         Booking booking = findBookingOrThrow(bookingId);
 
-        if (booking.getStatus() == BookingStatus.CANCELLED) {
-            throw new BadRequestException("Cannot check-in a cancelled booking");
+        if (booking.getStatus() != BookingStatus.ACCEPTED) {
+            throw new BadRequestException("Only accepted bookings can check-in");
+        }
+
+        if (!"PAID".equals(booking.getPaymentStatus())) {
+            throw new BadRequestException("Payment not completed");
         }
 
         booking.setStatus(BookingStatus.CHECKED_IN);
@@ -185,17 +189,20 @@ public class BookingServices {
         releaseRoom(booking.getRoomId());
     }
 
-    public void updateStatus(Long bookingId, String status, String paymentIntentId) {
+    public void updateStatus(Long bookingId, String status, String paymentIntentId, String paymentStatus) {
         Booking booking = findBookingOrThrow(bookingId);
 
         switch (status) {
             case "ACCEPTED":
                 booking.setStatus(BookingStatus.ACCEPTED);
                 booking.setPaymentIntentId(paymentIntentId);
+                booking.setPaymentStatus(paymentStatus);
                 break;
             case "CANCELLED":
                 booking.setStatus(BookingStatus.CANCELLED);
+                booking.setPaymentStatus(paymentStatus);
                 releaseRoom(booking.getRoomId());
+
                 break;
             default:
                 throw new BadRequestException("Invalid status");
@@ -203,7 +210,6 @@ public class BookingServices {
 
         repo.save(booking);
     }
-    
 
     private double calculateTotalPrice(Booking booking, RoomDTO room) {
         long days = ChronoUnit.DAYS.between(booking.getCheck_in_Date(), booking.getCheck_out_Date());

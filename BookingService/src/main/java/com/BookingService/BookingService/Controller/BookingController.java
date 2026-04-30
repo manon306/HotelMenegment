@@ -12,8 +12,6 @@ import com.BookingService.BookingService.Services.BookingServices;
 
 import jakarta.validation.Valid;
 import com.BookingService.BookingService.Entity.Booking;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/bookings")
@@ -82,8 +80,9 @@ public class BookingController {
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<?> updateBookingStatus(@PathVariable Long id,
             @RequestParam String status,
-            @RequestParam(required = false) String PaymentIntentId) {
-        bookingServices.updateStatus(id, status, PaymentIntentId);
+            @RequestParam(required = false) String PaymentIntentId,
+            @RequestParam(required = false) String paymentStatus) {
+        bookingServices.updateStatus(id, status, PaymentIntentId, paymentStatus);
         return ResponseEntity.ok("Booking status updated");
     }
 

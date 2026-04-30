@@ -38,4 +38,5 @@ public class Booking {
     private String phone;
     private int totalGuests;
     private String paymentIntentId;
+    private String paymentStatus;
 }

@@ -66,7 +66,7 @@ public class PaymentService {
             case "succeeded":
                 payment.setPaymentStatus(PaymentStatus.PAID);
                 invoiceService.generate(payment, customerName, customerEmail, customerPhone);
-                bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED", paymentIntentId);
+                bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED", paymentIntentId, "PAID");
 
                 break;
 
@@ -76,7 +76,7 @@ public class PaymentService {
 
             default:
                 payment.setPaymentStatus(PaymentStatus.FAILED);
-                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED", paymentIntentId);
+                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED", paymentIntentId, "FAILED");
         }
 
         paymentRepository.save(payment);
