@@ -13,7 +13,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BookingServices {
@@ -122,11 +121,11 @@ public class BookingServices {
     }
 
     public int countPendingBookingRequests() {
-        return repo.countByBookingStatus(BookingStatus.PENDING);
+        return repo.countByStatus(BookingStatus.PENDING);
     }
 
     public int countConfirmedBookings() {
-        return repo.countByBookingStatus(BookingStatus.ACCEPTED);
+        return repo.countByStatus(BookingStatus.ACCEPTED);
     }
 
     public Booking acceptBooking(Long bookingId) {
