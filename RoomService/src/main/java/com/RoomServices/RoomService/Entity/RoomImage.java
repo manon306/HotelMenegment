@@ -4,6 +4,7 @@ import lombok.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 
@@ -26,4 +27,9 @@ public class RoomImage {
     @JsonBackReference
     @ToString.Exclude
     private Room room;
+
+    @JsonProperty("imageUrl")
+    public String getImageUrl() {
+        return "http://localhost:8080/uploads/" + imagePath;
+    }
 }

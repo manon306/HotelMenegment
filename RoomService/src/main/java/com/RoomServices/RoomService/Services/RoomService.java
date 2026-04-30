@@ -56,13 +56,28 @@ public class RoomService {
         }
     }
 
+    // private String saveImageFile(MultipartFile file) {
+    // try {
+    // String fileName = System.currentTimeMillis() + "_" +
+    // file.getOriginalFilename();
+    // Path path = Paths.get(uploadDir + fileName);
+    // Files.createDirectories(path.getParent());
+    // Files.copy(file.getInputStream(), path);
+    // return path.toString();
+    // } catch (Exception e) {
+    // throw new BadRequestException("Error uploading image: " +
+    // file.getOriginalFilename());
+    // }
+    // }
     private String saveImageFile(MultipartFile file) {
         try {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path path = Paths.get(uploadDir + fileName);
+
             Files.createDirectories(path.getParent());
             Files.copy(file.getInputStream(), path);
-            return path.toString();
+
+            return fileName; 
         } catch (Exception e) {
             throw new BadRequestException("Error uploading image: " + file.getOriginalFilename());
         }
@@ -77,6 +92,7 @@ public class RoomService {
             RoomImage image = new RoomImage();
             image.setImagePath(imagePath);
             image.setRoom(room);
+
             roomImages.add(image);
         }
 
