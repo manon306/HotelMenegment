@@ -42,4 +42,10 @@ public class PaymentController {
 
         return ResponseEntity.ok(clientSecret);
     }
+
+    @GetMapping("/PendingPayment")
+    public int getCountPendingPayment() {
+        return paymentService.countByPendingPayment();
+    }
+
 }

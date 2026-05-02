@@ -138,4 +138,8 @@ public class PaymentService {
 
         return stripeRefund.getStatus();
     }
+
+    public int countByPendingPayment() {
+        return paymentRepository.countByPaymentStatus(PaymentStatus.PENDING);
+    }
 }

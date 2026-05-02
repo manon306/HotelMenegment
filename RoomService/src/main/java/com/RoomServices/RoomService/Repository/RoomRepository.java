@@ -8,7 +8,6 @@ import com.RoomServices.RoomService.ENUM.RoomType;
 import com.RoomServices.RoomService.Entity.Room;
 import com.RoomServices.RoomService.ENUM.RoomStatus;
 
-
 public interface RoomRepository extends JpaRepository<Room, Long> {
     // فلترة بالنوع
     List<Room> findByRoomType(RoomType roomType);
@@ -27,7 +26,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findByMiniBarTrue();
 
     List<Room> findBySmartTvTrue();
+
     List<Room> findByStatus(RoomStatus status);
+
+    int countByStatus(RoomStatus status);
 
     // @Query("SELECT r FROM Room r WHERE r.status = 'AVAILABLE' AND r.id NOT IN " +
     // "(SELECT b.room.id FROM Booking b WHERE b.checkIn < :checkOut AND b.checkOut

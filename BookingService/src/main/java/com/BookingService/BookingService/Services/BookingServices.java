@@ -1,5 +1,6 @@
 package com.BookingService.BookingService.Services;
 
+import com.BookingService.BookingService.DTO.MonthlyRevenueDTO;
 import com.BookingService.BookingService.DTO.RoomDTO;
 import com.BookingService.BookingService.DTO.UserDTO;
 import com.BookingService.BookingService.ENUM.BookingStatus;
@@ -13,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServices {
@@ -139,14 +141,6 @@ public class BookingServices {
         return totalRevenue != null ? totalRevenue : 0;
     }
 
-    // public void rejectBooking(Long bookingId) {
-    // validateBookingId(bookingId);
-    // Booking booking = findBookingOrThrow(bookingId);
-    // booking.setStatus(BookingStatus.REJECTED);
-    // repo.save(booking);
-    // releaseRoom(booking.getRoomId());
-    // }
-    // داخل BookingServices.java
     public void rejectBooking(Long bookingId) {
         validateBookingId(bookingId);
         Booking booking = findBookingOrThrow(bookingId);
@@ -246,5 +240,17 @@ public class BookingServices {
 
         double rate = ((double) activeBookings / totalRooms) * 100;
         return Math.round(rate * 10) / 10.0;
+    }
+
+    public List<MonthlyRevenueDTO> getMonthlyRevenue() {
+        List<Object[]> results = repo.findMonthlyRevenue();
+
+        return results.stream()
+                .map(row -> new MonthlyRevenueDTO(
+                        ((Number) row[0]).intValue(), // month
+                        ((Number) row[1]).intValue(), // year
+                        ((Number) row[2]).doubleValue() // totalRevenue
+                ))
+                .collect(Collectors.toList());
     }
 }

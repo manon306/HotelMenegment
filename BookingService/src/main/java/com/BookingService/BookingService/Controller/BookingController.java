@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import com.BookingService.BookingService.Services.BookingServices;
 
 import jakarta.validation.Valid;
+
+import com.BookingService.BookingService.DTO.MonthlyRevenueDTO;
 import com.BookingService.BookingService.Entity.Booking;
 
 @RestController
@@ -112,4 +114,8 @@ public class BookingController {
         return ResponseEntity.ok(bookingServices.countTotalRevenue());
     }
 
+    @GetMapping("/monthly-revenue")
+    public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue() {
+        return ResponseEntity.ok(bookingServices.getMonthlyRevenue());
+    }
 }

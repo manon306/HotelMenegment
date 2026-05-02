@@ -56,58 +56,14 @@ public class RoomService {
         }
     }
 
-    // private String saveImageFile(MultipartFile file) {
-    // try {
-    // String fileName = System.currentTimeMillis() + "_" +
-    // file.getOriginalFilename();
-    // Path path = Paths.get(uploadDir + fileName);
-
-    // Files.createDirectories(path.getParent());
-    // Files.copy(file.getInputStream(), path);
-
-    // return fileName;
-    // } catch (Exception e) {
-    // throw new BadRequestException("Error uploading image: " +
-    // file.getOriginalFilename());
-    // }
-    // }
-    // private String saveImageFile(MultipartFile file) {
-    // try {
-    // String fileName = System.currentTimeMillis() + "_" +
-    // file.getOriginalFilename();
-    // Path path = Paths.get("app/uploads/").resolve(fileName);
-
-    // Files.createDirectories(path.getParent());
-    // Files.copy(file.getInputStream(), path);
-
-    // return fileName;
-    // } catch (Exception e) {
-    // throw new BadRequestException("Error uploading image: " +
-    // file.getOriginalFilename());
-    // }
-    // }
-    private final String baseUrl = "http://localhost:8080/api/rooms/images/";
-
-    // private String saveImageFile(MultipartFile file) {
-    //     try {
-    //         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    //         Path path = Paths.get("/app/uploads/").resolve(fileName);
-    //         Files.createDirectories(path.getParent());
-    //         Files.copy(file.getInputStream(), path);
-    
-    //         return fileName; // قم بإرجاع اسم الملف فقط
-    //     } catch (Exception e) {
-    //         throw new BadRequestException("Error uploading image: " + file.getOriginalFilename());
-    //     }
-    // }
     private String saveImageFile(MultipartFile file) {
         try {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path path = Paths.get("/app/uploads/").resolve(fileName);
             Files.createDirectories(path.getParent());
             Files.copy(file.getInputStream(), path);
-    
-            return fileName; 
+
+            return fileName;
         } catch (Exception e) {
             throw new BadRequestException("Error uploading image: " + file.getOriginalFilename());
         }
@@ -246,5 +202,13 @@ public class RoomService {
 
     public List<Room> getAvailableRooms() {
         return roomRepository.findByStatus(RoomStatus.AVAILABLE);
+    }
+
+    public int CountAvailableRooms() {
+        return roomRepository.countByStatus(RoomStatus.AVAILABLE);
+    }
+
+    public int countRoomsUnderMaintenance() {
+        return roomRepository.countByStatus(RoomStatus.MAINTENANCE);
     }
 }

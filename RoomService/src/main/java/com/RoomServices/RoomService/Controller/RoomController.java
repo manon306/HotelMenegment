@@ -126,21 +126,6 @@ public class RoomController {
                 .body(resource);
     }
 
-    // @GetMapping("/{roomId}/images")
-    // public ResponseEntity<List<String>> getRoomImages(@PathVariable Long roomId)
-    // throws IOException {
-    // Path folderPath = Paths.get("/app/uploads/"); // ✅
-
-    // List<String> imageUrls = Files.list(folderPath)
-    // .filter(path -> path.getFileName().toString().startsWith("room_" + roomId))
-    // .map(path -> "http://localhost:8080/rooms/images/" +
-    // path.getFileName().toString())
-
-    // .collect(Collectors.toList());
-
-    // return ResponseEntity.ok(imageUrls);
-    // }
-
     @GetMapping("/{roomId}/images")
     public ResponseEntity<List<String>> getRoomImages(@PathVariable Long roomId) {
         System.out.println(" ENTERED ENDPOINT ");
@@ -153,4 +138,16 @@ public class RoomController {
 
         return ResponseEntity.ok(imageUrls);
     }
+
+    @GetMapping("/CountAvailableRoom")
+    public int countAvailableRooms() {
+        return roomService.CountAvailableRooms();
+    }
+
+    @GetMapping("/CountMantenanceRoom")
+    public int countMaintenanceRooms() {
+        int count = roomService.countRoomsUnderMaintenance();
+        return count;
+    }
+
 }
