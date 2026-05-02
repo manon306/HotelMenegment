@@ -55,7 +55,6 @@ services:
       - mysql-db
       - eureka-service
     environment:
-      # هذه الإعدادات ستطغى على الملف الموجود داخل الـ JAR وتضمن الاتصال
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/Hotel?createDatabaseIfNotExist=true
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-service:8761/eureka
     networks:

@@ -2,11 +2,13 @@ package com.UserService.UserService.Contoller;
 
 import com.UserService.UserService.DTO.LoginRequest;
 import com.UserService.UserService.DTO.RegisterDTO;
+import com.UserService.UserService.Entity.User;
 import com.UserService.UserService.Services.AuthService;
 
 import jakarta.validation.Valid;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,21 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
+    }
+
+    @PostMapping("/approve/{userId}")
+    public ResponseEntity<String> approveEmployee(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.approveEmployee(userId));
+    }
+
+    @PostMapping("/reject/{userId}")
+    public ResponseEntity<String> rejectEmployee(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.rejectEmployee(userId));
+    }
+
+    @GetMapping("/pending-employees")
+    public ResponseEntity<List<User>> getPendingEmployees() {
+        return ResponseEntity.ok(service.getPendingEmployees());
     }
 
 }

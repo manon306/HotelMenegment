@@ -33,6 +33,8 @@ public class User {
     private LocalDateTime created_at;
     private String otp;
     private LocalDateTime otpExpiryDate;
+    @Column(nullable = false)
+    private boolean isApproved = false;
 
     @PrePersist
     public void prePersist() {

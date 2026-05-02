@@ -22,11 +22,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
         int countByStatus(BookingStatus status);
 
-        @Query("SELECT MONTH(p.createdAt), YEAR(p.createdAt), SUM(p.amount) " +
-                        "FROM Payment p " +
-                        "WHERE p.paymentStatus = 'SUCCESS' " +
-                        "GROUP BY YEAR(p.createdAt), MONTH(p.createdAt) " +
-                        "ORDER BY YEAR(p.createdAt), MONTH(p.createdAt)")
+        @Query("SELECT MONTH(b.created_at), YEAR(b.created_at), SUM(b.TotalPrice) " +
+                        "FROM Booking b " +
+                        "WHERE b.status = 'ACCEPTED' " +
+                        "GROUP BY YEAR(b.created_at), MONTH(b.created_at) " +
+                        "ORDER BY YEAR(b.created_at), MONTH(b.created_at)")
         List<Object[]> findMonthlyRevenue();
 
 }
