@@ -26,7 +26,7 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    private final String uploadDir = "uploads/";
+    private final String uploadDir = "/app/uploads/";
     private static final int MIN_IMAGES_REQUIRED = 3;
 
     private Room findRoomByIdOrThrow(Long id) {
@@ -61,22 +61,52 @@ public class RoomService {
     // String fileName = System.currentTimeMillis() + "_" +
     // file.getOriginalFilename();
     // Path path = Paths.get(uploadDir + fileName);
+
     // Files.createDirectories(path.getParent());
     // Files.copy(file.getInputStream(), path);
-    // return path.toString();
+
+    // return fileName;
     // } catch (Exception e) {
     // throw new BadRequestException("Error uploading image: " +
     // file.getOriginalFilename());
     // }
     // }
+    // private String saveImageFile(MultipartFile file) {
+    // try {
+    // String fileName = System.currentTimeMillis() + "_" +
+    // file.getOriginalFilename();
+    // Path path = Paths.get("app/uploads/").resolve(fileName);
+
+    // Files.createDirectories(path.getParent());
+    // Files.copy(file.getInputStream(), path);
+
+    // return fileName;
+    // } catch (Exception e) {
+    // throw new BadRequestException("Error uploading image: " +
+    // file.getOriginalFilename());
+    // }
+    // }
+    private final String baseUrl = "http://localhost:8080/api/rooms/images/";
+
+    // private String saveImageFile(MultipartFile file) {
+    //     try {
+    //         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+    //         Path path = Paths.get("/app/uploads/").resolve(fileName);
+    //         Files.createDirectories(path.getParent());
+    //         Files.copy(file.getInputStream(), path);
+    
+    //         return fileName; // قم بإرجاع اسم الملف فقط
+    //     } catch (Exception e) {
+    //         throw new BadRequestException("Error uploading image: " + file.getOriginalFilename());
+    //     }
+    // }
     private String saveImageFile(MultipartFile file) {
         try {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadDir + fileName);
-
+            Path path = Paths.get("/app/uploads/").resolve(fileName);
             Files.createDirectories(path.getParent());
             Files.copy(file.getInputStream(), path);
-
+    
             return fileName; 
         } catch (Exception e) {
             throw new BadRequestException("Error uploading image: " + file.getOriginalFilename());

@@ -30,6 +30,8 @@ public class RoomImage {
 
     @JsonProperty("imageUrl")
     public String getImageUrl() {
-        return "http://localhost:8080/uploads/" + imagePath;
+        String fileName = imagePath.replace("uploads/", "");
+        return "http://localhost:8080/api/rooms/image/" + fileName;
     }
+
 }

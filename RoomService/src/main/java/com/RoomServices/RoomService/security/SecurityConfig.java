@@ -56,7 +56,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // ← ضيف دي
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/rooms/images/**").permitAll()
+                        .requestMatchers("/rooms/image/**").permitAll()
+                        .requestMatchers("/rooms/*/images").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/rooms/**")
                         .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_EMPLOYEE", "ROLE_ADMIN")
                         // .hasAnyRole("CUSTOMER", "EMPLOYEE", "ADMIN") // ← الأخص أولاً

@@ -63,6 +63,8 @@ services:
   room-service:
     build: ./RoomService
     container_name: Room-service
+    volumes:
+      - ./uploads:/app/uploads
     ports:
       - "8082:8082"
     develop:

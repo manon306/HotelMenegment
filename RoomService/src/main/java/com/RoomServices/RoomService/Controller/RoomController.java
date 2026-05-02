@@ -5,6 +5,7 @@ import com.RoomServices.RoomService.DTO.UpdateRoomRequest;
 import com.RoomServices.RoomService.ENUM.RoomStatus;
 import com.RoomServices.RoomService.ENUM.RoomType;
 import com.RoomServices.RoomService.Entity.Room;
+import com.RoomServices.RoomService.Entity.RoomImage;
 import com.RoomServices.RoomService.Services.*;
 
 import jakarta.validation.Valid;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.MediaType;
 import org.springframework.core.io.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -104,17 +108,49 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRoomsByFeature(feature));
     }
 
-    @GetMapping("/images/{filename}")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/image/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
-
-        Path filePath = Paths.get("app/uploads/")
-                .resolve(filename);
-
+        Path filePath = Paths.get("/app/uploads/").resolve(filename); // ✅
         Resource resource = new UrlResource(filePath.toUri());
 
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null)
+            contentType = "application/octet-stream";
+
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
+    }
+
+    // @GetMapping("/{roomId}/images")
+    // public ResponseEntity<List<String>> getRoomImages(@PathVariable Long roomId)
+    // throws IOException {
+    // Path folderPath = Paths.get("/app/uploads/"); // ✅
+
+    // List<String> imageUrls = Files.list(folderPath)
+    // .filter(path -> path.getFileName().toString().startsWith("room_" + roomId))
+    // .map(path -> "http://localhost:8080/rooms/images/" +
+    // path.getFileName().toString())
+
+    // .collect(Collectors.toList());
+
+    // return ResponseEntity.ok(imageUrls);
+    // }
+
+    @GetMapping("/{roomId}/images")
+    public ResponseEntity<List<String>> getRoomImages(@PathVariable Long roomId) {
+        System.out.println(" ENTERED ENDPOINT ");
+
+        Room room = roomService.getRoomById(roomId);
+
+        List<String> imageUrls = room.getImages().stream()
+                .map(RoomImage::getImageUrl)
+                .toList();
+
+        return ResponseEntity.ok(imageUrls);
     }
 }
