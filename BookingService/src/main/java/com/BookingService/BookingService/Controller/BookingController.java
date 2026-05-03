@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import com.BookingService.BookingService.DTO.MonthlyRevenueDTO;
 import com.BookingService.BookingService.Entity.Booking;
 
+
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
@@ -94,7 +95,7 @@ public class BookingController {
     }
 
     @GetMapping("/AllBookings")
-    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN','EMPLOYEE')")
     public ResponseEntity<List<Booking>> getAllBooking() {
         return ResponseEntity.ok(bookingServices.viewAllBookings());
     }
@@ -118,4 +119,10 @@ public class BookingController {
     public ResponseEntity<List<MonthlyRevenueDTO>> getMonthlyRevenue() {
         return ResponseEntity.ok(bookingServices.getMonthlyRevenue());
     }
+
+    @GetMapping("/GetAllBookingsByStatus")
+    public List<Booking> GetAllBookingsByStatus(@RequestParam Long userId,@RequestParam String status) {
+        return bookingServices.getBookingsByUserIdAndStatus(userId, status);
+    }
+    
 }

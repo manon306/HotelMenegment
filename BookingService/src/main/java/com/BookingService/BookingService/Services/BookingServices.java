@@ -253,4 +253,14 @@ public class BookingServices {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public List<Booking> getBookingsByUserIdAndStatus(Long userId, String status) {
+        validateUserExists(userId);
+        try {
+            BookingStatus bookingStatus = BookingStatus.valueOf(status.toUpperCase());
+            return repo.findByUserIdAndStatus(userId, bookingStatus);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid booking status: " + status);
+        }
+    }
 }

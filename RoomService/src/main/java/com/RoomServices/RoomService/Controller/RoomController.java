@@ -108,6 +108,8 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRoomsByFeature(feature));
     }
 
+
+    
     @GetMapping("/image/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
         Path filePath = Paths.get("/app/uploads/").resolve(filename); // ✅

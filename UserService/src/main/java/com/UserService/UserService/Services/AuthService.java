@@ -59,7 +59,6 @@ public class AuthService {
     public String approveEmployee(Long userId) {
         User user = repo.findByIdAndRole(userId, Role.EMPLOYEE)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-
         user.setApproved(true);
         repo.save(user);
         return "Employee approved successfully";
@@ -81,6 +80,10 @@ public class AuthService {
     public String login(String email, String password) {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        if (user.getRole() == Role.EMPLOYEE && !user.isApproved()) {
+            throw new RuntimeException("Employee account is pending approval");
+        }
 
         if (!encoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");

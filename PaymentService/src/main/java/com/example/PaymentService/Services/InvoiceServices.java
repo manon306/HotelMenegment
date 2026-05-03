@@ -29,6 +29,8 @@ public class InvoiceServices {
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found"));
     }
 
+    
+
     public void deleteInvoice(Long id) {
         if (id == null || !invoiceRepo.existsById(id)) {
             throw new ResourceNotFoundException("Invoice not found");
@@ -37,7 +39,6 @@ public class InvoiceServices {
     }
 
     public void generate(Payment payment, String customerName, String customerEmail, String customerPhone) {
-
         Invoice invoice = new Invoice();
         invoice.setBookingId(payment.getBookingId());
         invoice.setPaymentId(payment.getId());

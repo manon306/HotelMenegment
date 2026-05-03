@@ -4,7 +4,6 @@ import com.BookingService.BookingService.ENUM.BookingStatus;
 import com.BookingService.BookingService.Entity.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -22,11 +21,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
         int countByStatus(BookingStatus status);
 
-        @Query("SELECT MONTH(b.created_at), YEAR(b.created_at), SUM(b.TotalPrice) " +
+        @Query("SELECT MONTH(b.check_in_Date), YEAR(b.check_in_Date), SUM(b.TotalPrice) " +
                         "FROM Booking b " +
-                        "WHERE b.status = 'ACCEPTED' " +
-                        "GROUP BY YEAR(b.created_at), MONTH(b.created_at) " +
-                        "ORDER BY YEAR(b.created_at), MONTH(b.created_at)")
+                        "WHERE b.status = 'CONFIRMED' " +
+                        "GROUP BY YEAR(b.check_in_Date), MONTH(b.check_in_Date) " +
+                        "ORDER BY YEAR(b.check_in_Date), MONTH(b.check_in_Date)")
         List<Object[]> findMonthlyRevenue();
 
+        List<Booking> findByUserIdAndStatus(Long userId, BookingStatus status);
 }
