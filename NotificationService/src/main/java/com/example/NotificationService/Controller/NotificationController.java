@@ -29,6 +29,16 @@ public class NotificationController {
                 request.getMessage());
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteAllUserNotifications(@PathVariable Long id) {
+        service.deleteAllUserNotifications(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteNotification(@PathVariable Long id) {
+        service.deleteNotification(id);
+    }
+
     // User sees only their notifications
     @GetMapping("/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','CUSTOMER')")

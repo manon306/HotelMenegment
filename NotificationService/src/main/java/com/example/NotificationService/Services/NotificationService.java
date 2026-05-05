@@ -72,6 +72,7 @@ public class NotificationService {
         repository.saveAll(notifications);
     }
 
+    
     public void deleteNotification(Long id) {
         repository.deleteById(id);
     }
