@@ -263,4 +263,19 @@ public class BookingServices {
             throw new BadRequestException("Invalid booking status: " + status);
         }
     }
+
+    public boolean canReview(Long userId, Long roomId) {
+        validateUserExists(userId);
+        
+        List<BookingStatus> allowedStatuses = List.of(
+            BookingStatus.CHECKED_IN,
+            BookingStatus.COMPLETED
+        );
+        
+        return repo.existsByUserIdAndRoomIdAndStatusIn(
+            userId, 
+            roomId, 
+            allowedStatuses
+        );
+    }
 }

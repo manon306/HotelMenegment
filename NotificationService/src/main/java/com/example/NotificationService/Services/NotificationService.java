@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.NotificationService.Repository.NotificationRepository;
 
+import jakarta.transaction.Transactional;
+
 import com.example.NotificationService.DTO.UserDTO;
 import com.example.NotificationService.ENTITY.Notification;
 import com.example.NotificationService.Exceptions.ResourceNotFoundException;
@@ -72,11 +74,11 @@ public class NotificationService {
         repository.saveAll(notifications);
     }
 
-    
     public void deleteNotification(Long id) {
         repository.deleteById(id);
     }
 
+    @Transactional
     public void deleteAllUserNotifications(Long userId) {
         repository.deleteByUserId(userId);
     }

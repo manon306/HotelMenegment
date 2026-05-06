@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import com.BookingService.BookingService.DTO.MonthlyRevenueDTO;
 import com.BookingService.BookingService.Entity.Booking;
 
-
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
@@ -121,8 +120,13 @@ public class BookingController {
     }
 
     @GetMapping("/GetAllBookingsByStatus")
-    public List<Booking> GetAllBookingsByStatus(@RequestParam Long userId,@RequestParam String status) {
+    public List<Booking> GetAllBookingsByStatus(@RequestParam Long userId, @RequestParam String status) {
         return bookingServices.getBookingsByUserIdAndStatus(userId, status);
     }
-    
+
+    @GetMapping("/CanReview")
+    public ResponseEntity<Boolean> canReview(@RequestParam Long userId, @RequestParam Long roomId) {
+        return ResponseEntity.ok(bookingServices.canReview(userId, roomId));
+    }
+
 }

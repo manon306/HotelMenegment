@@ -193,7 +193,6 @@ public class ReviewService {
     public Map<String, Object> getReviewStatistics() {
         Map<String, Object> stats = new HashMap<>();
 
-        // حساب متوسط التقييمات من الداتابيز
         Double avgRating = Repo.getAverageRating();
         Double totalReviews = Repo.getTotalReviews();
 
