@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.MediaType;
 import org.springframework.core.io.Resource;
@@ -108,8 +107,6 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRoomsByFeature(feature));
     }
 
-
-    
     @GetMapping("/image/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
         Path filePath = Paths.get("/app/uploads/").resolve(filename); // ✅

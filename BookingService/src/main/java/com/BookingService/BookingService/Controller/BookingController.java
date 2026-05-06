@@ -129,4 +129,9 @@ public class BookingController {
         return ResponseEntity.ok(bookingServices.canReview(userId, roomId));
     }
 
+    @GetMapping("/GetPendingBookingForUser")
+    public ResponseEntity<Booking> getPendingBookingForUser(@RequestParam Long userId, @RequestParam long roomID) {
+        return ResponseEntity.ok(bookingServices.GetPendingBookingForUser(userId, roomID));
+    }
+
 }

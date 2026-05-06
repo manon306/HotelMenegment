@@ -1,6 +1,6 @@
 package com.UserService.UserService.security;
 
-import com.UserService.UserService.Services.CustomUserDetailsService;
+// import com.UserService.UserService.Services.CustomUserDetailsService;
 import com.UserService.UserService.Services.JwtService;
 
 import jakarta.servlet.*;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,8 +23,8 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    // @Autowired
+    // private CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

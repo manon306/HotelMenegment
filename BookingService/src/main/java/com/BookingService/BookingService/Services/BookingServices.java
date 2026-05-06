@@ -278,4 +278,11 @@ public class BookingServices {
             allowedStatuses
         );
     }
+    public Booking GetPendingBookingForUser(long userID , long roomID){
+        List<Booking> bookings = repo.findByUserIdAndStatus(userID, BookingStatus.PENDING);
+        return bookings.stream()
+                .filter(b -> b.getRoomId() == roomID)
+                .findFirst()
+                .orElse(null);
+    }
 }
