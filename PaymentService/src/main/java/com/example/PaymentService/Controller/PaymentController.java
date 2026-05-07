@@ -1,6 +1,8 @@
 package com.example.PaymentService.Controller;
 
+import com.example.PaymentService.Services.NotificationServices;
 import com.example.PaymentService.Services.PaymentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,11 +15,15 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private NotificationServices notificationServices;
+
     @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/create")
-    public ResponseEntity<?> createPayment(@RequestParam Long bookingId, @RequestParam Double amount) throws Exception {
+    public ResponseEntity<?> createPayment(@RequestParam long userId , @RequestParam String email,@RequestParam Long bookingId, @RequestParam Double amount) throws Exception {
         String clientSecret = paymentService.createPayment(bookingId, amount);
-        return ResponseEntity.ok(clientSecret);
+        notificationServices.SendSecretNumberInEmail(userId, email, clientSecret);
+        return ResponseEntity.ok("Payment created, check your email");
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")

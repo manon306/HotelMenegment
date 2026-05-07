@@ -41,7 +41,7 @@ public class Payment {
     private String transactionId;
 
     @CreationTimestamp
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist
