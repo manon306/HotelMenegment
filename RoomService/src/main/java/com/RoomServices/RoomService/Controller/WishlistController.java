@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.RoomServices.RoomService.Entity.Wishlists;
 import com.RoomServices.RoomService.Services.WishlistServices;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -25,8 +27,11 @@ public class WishlistController {
     private WishlistServices wishlistServices;
 
     @PostMapping("/add")
-    public ResponseEntity<Wishlists> addToWishlist(@RequestBody @Valid WishlistRequest request) {
-        return ResponseEntity.ok(wishlistServices.addToWishlist(request.getUserId(), request.getRoomId()));
+    public ResponseEntity<Wishlists> addToWishlist(@RequestBody @Valid WishlistRequest roomId) {
+        // Long userId = (Long) SecurityContextHolder.getContext()
+        // .getAuthentication()
+        // .getPrincipal();
+        return ResponseEntity.ok(wishlistServices.addToWishlist(roomId.getRoomId()));
     }
 
     @GetMapping("/{userId}")
@@ -45,4 +50,10 @@ public class WishlistController {
         wishlistServices.clearWishlist(userId);
         return ResponseEntity.ok("Wishlist cleared");
     }
+
+    @GetMapping("/InWishlistForUser")
+    public boolean isRoomInWishlist(@RequestParam Long userId, @RequestParam Long roomId) {
+        return wishlistServices.isRoomInWishlist(userId, roomId);
+    }
+
 }

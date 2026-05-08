@@ -31,7 +31,7 @@ public class UserServices {
     private static final int OTP_RANDOM_BOUND = 900000;
     private static final int OTP_MIN_VALUE = 100000;
 
-    private User findUserByEmailOrThrow(String email) {
+    public User findUserByEmailOrThrow(String email) {
         return repo.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
     }

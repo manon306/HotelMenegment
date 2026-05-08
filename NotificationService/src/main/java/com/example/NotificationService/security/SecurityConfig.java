@@ -30,9 +30,9 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/User/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/notifications/**").authenticated()
-
-                        .anyRequest().authenticated())
+                        .requestMatchers("/notifications/**").permitAll()
+                        // .anyRequest().authenticated()
+                    )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // ← وده

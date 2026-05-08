@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.UserService.UserService.DTO.UserDTO;
 import com.UserService.UserService.Entity.*;
+import com.UserService.UserService.Exceptions.ResourceNotFoundException;
 import com.UserService.UserService.Services.UserServices;
 
 import jakarta.validation.Valid;
@@ -67,6 +68,16 @@ public class UserController {
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         return ResponseEntity.ok(services.getUserStatistics());
+    }
+
+    // في الـ UserController الخاص بـ User-Service
+    @GetMapping("/by-email")
+    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+        User user = services.findUserByEmailOrThrow(email);
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with email: " + email);
+        }
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/ping")

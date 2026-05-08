@@ -54,7 +54,9 @@ public class SecurityConfig {
                         .requestMatchers("/rooms/image/**").permitAll()
                         .requestMatchers("/rooms/*/images").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/wishlist/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/rooms/**")
+                        
                         .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_EMPLOYEE", "ROLE_ADMIN")
                         // .hasAnyRole("CUSTOMER", "EMPLOYEE", "ADMIN") // ← الأخص أولاً
                         .requestMatchers("/rooms/**").authenticated()

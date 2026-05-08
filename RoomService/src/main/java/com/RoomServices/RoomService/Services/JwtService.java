@@ -19,6 +19,10 @@ public class JwtService {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
+    }
+
     private <T> T extractClaim(String token, Function<Claims, T> resolver) {
         return resolver.apply(Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))

@@ -16,6 +16,7 @@ public class JwtService {
     private final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
     public String generateToken(String username, Role role, Long userId) {
+        System.out.println("USER ID IN TOKEN = " + userId);
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role.name())

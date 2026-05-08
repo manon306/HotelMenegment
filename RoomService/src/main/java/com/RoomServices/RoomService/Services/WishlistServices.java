@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.RoomServices.RoomService.Entity.Room;
@@ -38,8 +40,10 @@ public class WishlistServices {
         }
     }
 
-    public Wishlists addToWishlist(Long userId, Long roomId) {
-        userClient.validateUserExists(userId);
+    public Wishlists addToWishlist(Long roomId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userClient.getUserIdFromEmail(email);
+        // userClient.validateUserExists(userId);
         Room room = findRoomOrThrow(roomId);
         checkDuplicateWishlist(userId, roomId);
 
@@ -67,5 +71,11 @@ public class WishlistServices {
     public void clearWishlist(Long userId) {
         userClient.validateUserExists(userId);
         whishListRepository.deleteByUserId(userId);
+    }
+
+    public boolean isRoomInWishlist(Long userId, Long roomId) {
+        List<Wishlists> wishlist = whishListRepository.findByUserId(userId);
+        return wishlist.stream()
+                .anyMatch(w -> w.getRoom().getId().equals(roomId));
     }
 }

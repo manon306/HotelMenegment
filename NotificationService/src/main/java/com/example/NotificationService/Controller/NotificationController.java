@@ -21,7 +21,7 @@ public class NotificationController {
 
     // Send notification (system/admin only)
     @PostMapping("/send")
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','CUSTOMER')")
     public Notification send(@RequestBody @Valid NotificationRequest request) {
         return service.sendNotification(
                 request.getUserId(),

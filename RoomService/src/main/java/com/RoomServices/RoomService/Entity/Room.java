@@ -52,6 +52,7 @@ public class Room {
 
     @Builder.Default
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Wishlists> wishlists = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

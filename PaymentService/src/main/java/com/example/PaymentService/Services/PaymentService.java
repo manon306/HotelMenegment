@@ -42,6 +42,7 @@ public class PaymentService {
     public String createPayment(long bookingId, Double amount) throws Exception {
         PaymentIntent intent = stripeService.createIntent(amount);
         Payment payment = buildPayment(bookingId, amount, intent.getId());
+        payment.setPaymentStatus(PaymentStatus.PENDING);
         paymentRepository.save(payment);
         return intent.getClientSecret();
     }
@@ -56,16 +57,16 @@ public class PaymentService {
         PaymentIntent intent = stripeService.retrieveIntent(paymentIntentId);
 
         Payment payment = paymentRepository.findByTransactionId(paymentIntentId);
-
-        if (payment == null) {
-            throw new ResourceNotFoundException("Payment not found");
-        }
+        // payment.setPaymentStatus(PaymentStatus.PAID);
+        // if (payment == null) {
+        //     throw new ResourceNotFoundException("Payment not found");
+        // }
 
         switch (intent.getStatus()) {
 
             case "succeeded":
                 payment.setPaymentStatus(PaymentStatus.PAID);
-                invoiceService.generate(payment, customerName, customerEmail, customerPhone);
+                // invoiceService.generate(payment, customerName, customerEmail, customerPhone);
                 bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED", paymentIntentId, "PAID");
 
                 break;

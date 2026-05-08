@@ -17,7 +17,8 @@ services:
 
   # 2. يوريكا سيرفر
   eureka-service:
-    image: hotelmanagement-eureka-service:latest
+    # image: hotelmanagement-eureka-service:latest
+    build: ./eurekaServices
     container_name: eureka-service
     ports:
       - "8761:8761"
@@ -26,7 +27,8 @@ services:
 
   # 3. خدمة المستخدم
   user-service:
-    image: hotelmanagement-user-service:latest
+    # image: hotelmanagement-user-service:latest
+    build: ./UserService
     container_name: user-service
     develop:
       watch : 

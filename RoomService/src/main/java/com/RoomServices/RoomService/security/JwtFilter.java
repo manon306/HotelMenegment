@@ -35,14 +35,17 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String jwt = authHeader.substring(7);
-        String email = jwtService.extractUsername(jwt); // بنستخرج الايميل من الـ Token
+        String email = jwtService.extractUsername(jwt);
+        Long userId = jwtService.extractUserId(jwt);
         System.out.println("AUTH HEADER: " + authHeader);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // بدلاً من الـ Database، بنقرأ الـ Role من الـ Token مباشرة
             String role = jwtService.extractRole(jwt);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    email, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
+                    userId,
+                    null,
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
