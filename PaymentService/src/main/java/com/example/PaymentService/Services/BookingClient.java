@@ -29,21 +29,18 @@ public class BookingClient {
 
     private HttpEntity<Void> buildAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", getCurrentToken());
+    
+        String token = getCurrentToken();
+    
+        if (token != null && !token.startsWith("Bearer ")) {
+            token = "Bearer " + token;
+        }
+    
+        headers.set("Authorization", token);
+    
         return new HttpEntity<>(headers);
     }
 
-    // public void updateStatus(Long bookingId, String status, String
-    // paymentIntentId) {
-    // try {
-    // // ضفنا paymentIntentId كـ Query Parameter في الـ URL
-    // String url = "http://BOOKING-SERVICE/bookings/" + bookingId +
-    // "/status?status=" + status + "&paymentIntentId=" + paymentIntentId;
-    // restTemplate.exchange(url, HttpMethod.PUT, buildAuthEntity(), Void.class);
-    // } catch (Exception e) {
-    // System.out.println("Booking update failed: " + e.getMessage());
-    // }
-    // }
     public void updateStatus(Long bookingId, String status, String paymentIntentId, String paymentStatus) {
         try {
             UriComponentsBuilder builder = UriComponentsBuilder

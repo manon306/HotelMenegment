@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.RoomServices.RoomService.ENUM.RoomStatus;
 import com.RoomServices.RoomService.ENUM.RoomType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.*;
@@ -52,7 +53,7 @@ public class Room {
 
     @Builder.Default
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Wishlists> wishlists = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

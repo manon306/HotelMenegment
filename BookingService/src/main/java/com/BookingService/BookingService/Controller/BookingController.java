@@ -56,7 +56,7 @@ public class BookingController {
     }
 
     @PostMapping("/{id}/reject")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE','CUSTOMER')")
     public ResponseEntity<?> rejectBooking(@PathVariable Long id) {
         this.bookingServices.rejectBooking(id);
         return ResponseEntity.ok("Booking rejected successfully");
@@ -77,9 +77,8 @@ public class BookingController {
         this.bookingServices.checkOut(id);
         return ResponseEntity.ok("Booking checked out successfully");
     }
-
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasAnyRole('EMPLOYEE','CUSTOMER')") // Allow both EMPLOYEE and ADMIN to update status
     public ResponseEntity<?> updateBookingStatus(@PathVariable Long id,
             @RequestParam String status,
             @RequestParam(required = false) String PaymentIntentId,
@@ -87,7 +86,6 @@ public class BookingController {
         bookingServices.updateStatus(id, status, PaymentIntentId, paymentStatus);
         return ResponseEntity.ok("Booking status updated");
     }
-
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         return ResponseEntity.ok(bookingServices.getDashboardStats());

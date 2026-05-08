@@ -10,9 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+
     Payment findByTransactionId(String transactionId);
 
     List<Payment> findByBookingId(Long bookingId);
 
     int countByPaymentStatus(PaymentStatus status);
+
+    boolean existsByBookingIdAndPaymentStatus(
+            Long bookingId,
+            PaymentStatus paymentStatus);
 }

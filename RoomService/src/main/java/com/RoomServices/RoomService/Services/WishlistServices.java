@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +42,6 @@ public class WishlistServices {
     public Wishlists addToWishlist(Long roomId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userClient.getUserIdFromEmail(email);
-        // userClient.validateUserExists(userId);
         Room room = findRoomOrThrow(roomId);
         checkDuplicateWishlist(userId, roomId);
 

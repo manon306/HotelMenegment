@@ -17,6 +17,7 @@ import com.example.PaymentService.Exceptions.ResourceNotFoundException;
 
 @Service
 public class PaymentService {
+
     @Autowired
     private PaymentRepository paymentRepository;
 
@@ -25,9 +26,6 @@ public class PaymentService {
 
     @Autowired
     private BookingClient bookingClient;
-
-    @Autowired
-    private InvoiceServices invoiceService;
 
     private Payment buildPayment(Long bookingId, Double amount, String transactionId) {
         Payment payment = new Payment();
@@ -40,9 +38,16 @@ public class PaymentService {
     }
 
     public String createPayment(long bookingId, Double amount) throws Exception {
+        boolean alreadyPaid = paymentRepository.existsByBookingIdAndPaymentStatus(bookingId, PaymentStatus.PAID);
+        if (alreadyPaid) {
+            throw new BadRequestException("This booking already paid");
+        }
         PaymentIntent intent = stripeService.createIntent(amount);
+
         Payment payment = buildPayment(bookingId, amount, intent.getId());
-        payment.setPaymentStatus(PaymentStatus.PENDING);
+
+        payment.setPaymentStatus(
+                PaymentStatus.PENDING);
         paymentRepository.save(payment);
         return intent.getClientSecret();
     }
@@ -51,36 +56,48 @@ public class PaymentService {
         return paymentRepository.findByTransactionId(transactionId);
     }
 
-    public String confirmPayment(String paymentIntentId, String customerName, String customerEmail,
+    public String confirmPayment(
+            String paymentIntentId,
+            String customerName,
+            String customerEmail,
             String customerPhone) throws Exception {
 
-        PaymentIntent intent = stripeService.retrieveIntent(paymentIntentId);
+        PaymentIntent intent = stripeService.retrieveIntent(
+                paymentIntentId);
 
-        Payment payment = paymentRepository.findByTransactionId(paymentIntentId);
-        // payment.setPaymentStatus(PaymentStatus.PAID);
-        // if (payment == null) {
-        //     throw new ResourceNotFoundException("Payment not found");
-        // }
+        Payment payment = paymentRepository.findByTransactionId(
+                paymentIntentId);
 
-        switch (intent.getStatus()) {
+        if (payment == null) {
 
-            case "succeeded":
-                payment.setPaymentStatus(PaymentStatus.PAID);
-                // invoiceService.generate(payment, customerName, customerEmail, customerPhone);
-                bookingClient.updateStatus(payment.getBookingId(), "ACCEPTED", paymentIntentId, "PAID");
-
-                break;
-
-            case "processing":
-                payment.setPaymentStatus(PaymentStatus.PENDING);
-                break;
-
-            default:
-                payment.setPaymentStatus(PaymentStatus.FAILED);
-                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED", paymentIntentId, "FAILED");
+            throw new ResourceNotFoundException(
+                    "Payment not found");
         }
 
-        paymentRepository.save(payment);
+        if (payment.getPaymentStatus() == PaymentStatus.PAID) {
+            return "ALREADY_PAID";
+        }
+
+        switch (intent.getStatus()) {
+            case "succeeded":
+                payment.setPaymentStatus(
+                        PaymentStatus.PAID);
+                paymentRepository.save(payment);
+                bookingClient.updateStatus(
+                        payment.getBookingId(),
+                        "ACCEPTED",
+                        paymentIntentId,
+                        "PAID");
+                break;
+            case "processing":
+                payment.setPaymentStatus(PaymentStatus.PENDING);
+                paymentRepository.save(payment);
+                break;
+            default:
+                payment.setPaymentStatus(PaymentStatus.FAILED);
+                paymentRepository.save(payment);
+                bookingClient.updateStatus(payment.getBookingId(), "CANCELLED", paymentIntentId, "FAILED");
+        }
 
         return payment.getPaymentStatus().name();
     }
@@ -90,57 +107,48 @@ public class PaymentService {
         payment.setBookingId(bookingId);
         payment.setAmount(amount);
         payment.setPaymentType(PaymentType.CASH);
-        payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setPaymentStatus(
+                PaymentStatus.PENDING);
         payment.setTransactionId("CASH-" + System.currentTimeMillis());
-
         return paymentRepository.save(payment);
     }
 
     private void validateRetry(Long bookingId) {
-
         List<Payment> payments = paymentRepository.findByBookingId(bookingId);
-
         if (payments.isEmpty()) {
             throw new ResourceNotFoundException("No previous payment found");
         }
-
         Payment lastPayment = payments.get(payments.size() - 1);
-
         if (lastPayment.getPaymentStatus() != PaymentStatus.FAILED) {
             throw new BadRequestException("Retry allowed only after FAILED payment");
         }
     }
 
     public String retryPayment(Long bookingId, Double amount) throws Exception {
-
         validateRetry(bookingId);
-
         PaymentIntent intent = stripeService.createIntent(amount);
-
         Payment payment = buildPayment(bookingId, amount, intent.getId());
-
         paymentRepository.save(payment);
-
         return intent.getClientSecret();
     }
 
     public String refundPayment(String paymentIntentId) throws Exception {
-        Payment payment = paymentRepository.findByTransactionId(paymentIntentId);
+        Payment payment = paymentRepository.findByTransactionId(
+                paymentIntentId);
         if (payment == null) {
-            throw new ResourceNotFoundException("Payment record not found for Intent ID: " + paymentIntentId);
+            throw new ResourceNotFoundException("Payment record not found");
         }
-
         com.stripe.model.Refund stripeRefund = stripeService.createRefund(paymentIntentId);
-
-        if ("succeeded".equals(stripeRefund.getStatus())) {
+        if ("succeeded".equals(
+                stripeRefund.getStatus())) {
             payment.setPaymentStatus(PaymentStatus.REFUNDED);
             paymentRepository.save(payment);
         }
-
         return stripeRefund.getStatus();
     }
 
     public int countByPendingPayment() {
-        return paymentRepository.countByPaymentStatus(PaymentStatus.PENDING);
+        return paymentRepository.countByPaymentStatus(
+                PaymentStatus.PENDING);
     }
 }

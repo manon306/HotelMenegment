@@ -27,11 +27,11 @@ public class WishlistController {
     private WishlistServices wishlistServices;
 
     @PostMapping("/add")
-    public ResponseEntity<Wishlists> addToWishlist(@RequestBody @Valid WishlistRequest roomId) {
+    public ResponseEntity<Wishlists> addToWishlist(@RequestParam @Valid long request) {
         // Long userId = (Long) SecurityContextHolder.getContext()
         // .getAuthentication()
         // .getPrincipal();
-        return ResponseEntity.ok(wishlistServices.addToWishlist(roomId.getRoomId()));
+        return ResponseEntity.ok(wishlistServices.addToWishlist(request));
     }
 
     @GetMapping("/{userId}")
